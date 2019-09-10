@@ -1,0 +1,25 @@
+{
+  "name": "taskmaster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kai-ros/taskmaster.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.525.0",
+    "dotenv": "^8.1.0",
+    "faker": "^4.1.0",
+    "uuid": "^3.3.3"
+  },
+  "bugs": {
+    "url": "https://github.com/Kai-ros/taskmaster/issues"
+  },
+  "homepage": "https://github.com/Kai-ros/taskmaster#readme"
+}
