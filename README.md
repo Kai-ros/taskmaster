@@ -10,3 +10,9 @@ This is an app to create and update tasks with.
 
 ## Collaborators
 * Marisha Hoza, Matt Stuhring, Nick Paro
+
+## Team Members Whiteboard
+* Jackie Ly, Nhu Trinh, Nick Paro, Brandon Hurrington, Manish KC, Jack Kinne, Renee Messick
+
+## Team Members Lab
+* Chris Coulon, Matt Stuhring, Melfi Perez, Brandon Hurrington 
