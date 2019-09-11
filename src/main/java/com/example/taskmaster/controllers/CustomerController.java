@@ -28,11 +28,11 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public Customer addNewUser (@RequestBody Customer customer) {
-        Customer c = new Customer();
-        c.setName( customer.getName() );
-        c.setOld( customer.getOld() );
-        customerRepository.save(c);
-        return c;
+        Customer newCustomer = new Customer();
+        newCustomer.setName( customer.getName());
+        newCustomer.setOld( customer.getOld());
+        customerRepository.save(newCustomer);
+        return newCustomer;
     }
 
     @GetMapping("/tasks")
