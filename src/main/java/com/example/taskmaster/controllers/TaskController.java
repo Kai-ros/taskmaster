@@ -6,6 +6,7 @@ import com.example.taskmaster.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,11 @@ public class TaskController
 
     @Autowired
     TaskRepository taskRepository;
+
+    @GetMapping("/")
+    public String getHome() {
+        return "index";
+    }
 
     @GetMapping("/tasks")
     public List<Task> getTasks() {
@@ -33,51 +39,52 @@ public class TaskController
     @PostMapping("/tasks")
     public Task addNewTask (@RequestBody Task task)
     {
-        Task newTask = new Task();
-        newTask.setTitle( task.getTitle() );
-        newTask.setDescription( task.getDescription() );
-
-        if (task.getAssignee() == null)
-        {
-            newTask.setStatus("Available");
-        }
-        else
-        {
-            newTask.setAssignee( task.getAssignee() );
-            newTask.setStatus("Assigned");
-        }
-
+        Task newTask = new Task(task.getId(), task.getTitle(), task.getDescription(), " - Available", "none");
+        historySetter(newTask);
         taskRepository.save(newTask);
         return newTask;
     }
-
-    /*
-    * A user should be able to make a PUT request to /tasks/{id}/state to advance the status of that task.
-    Tasks should advance from Available -> Assigned -> Accepted -> Finished.
-    As the task advances, add an entry to the history array to note the advancement. Include the date and the action that was taken.
-    */
 
     @PutMapping("/tasks/{id}/state")
     public Task updateTaskStatus(@PathVariable String id)
     {
         Task taskToBeUpdated = taskRepository.findById(id).get();
-
-        if (taskToBeUpdated.getStatus().equals("Available"))
+        if (taskToBeUpdated.getStatus().equals(" - Assigned"))
         {
-            taskToBeUpdated.setStatus("Assigned");
-            taskToBeUpdated.setHistory(" - Changed status to Assigned.");
+            taskToBeUpdated.setStatus(" - Accepted");
+            historySetter(taskToBeUpdated);
         }
-        else if ( taskToBeUpdated.getStatus().equals("Assigned"))
+        else if (taskToBeUpdated.getStatus().equals(" - Accepted"))
         {
-            taskToBeUpdated.setStatus("Accepted");
-            taskToBeUpdated.setHistory(" - Changed status to Accepted.");
-        }
-        else if ( taskToBeUpdated.getStatus().equals("Accepted"))
-        {
-            taskToBeUpdated.setStatus("Finished");
-            taskToBeUpdated.setHistory(" - Changed status to Finished.");
+            taskToBeUpdated.setStatus(" - Finished");
+            historySetter(taskToBeUpdated);
         }
         taskRepository.save(taskToBeUpdated);
         return taskToBeUpdated;
+    }
+
+    @PutMapping("/tasks/{id}/assign/{assignee}")
+    public Task addTaskAssignee(@PathVariable String id, @PathVariable String assignee) {
+        Task taskAssignee = taskRepository.findById(id).get();
+        taskAssignee.setAssignee(assignee);
+        taskAssignee.setStatus(" - Assigned");
+        historySetter(taskAssignee);
+        taskRepository.save(taskAssignee);
+        return taskAssignee;
+    }
+
+    @DeleteMapping("/tasks/{id}/delete")
+    public Task deleteTaskStatus(@PathVariable String id)
+    {
+        Task taskToBeDeleted = taskRepository.findById(id).get();
+        taskRepository.delete(taskToBeDeleted);
+        return taskToBeDeleted;
+    }
+
+    // Helper Method
+    private void historySetter(Task task)
+    {
+        Task.History history = new Task.History(new Date().toString(), task.getStatus());
+        task.addHistory(history);
     }
 }
