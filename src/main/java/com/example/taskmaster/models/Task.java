@@ -13,6 +13,7 @@ public class Task
     private String description;
     private String status;
     private String assignee;
+    private String imageURL;
 
     private ArrayList<History> historyList;
 
@@ -26,6 +27,17 @@ public class Task
         this.status = status;
         this.assignee = assignee;
         this.historyList = new ArrayList<>();
+    }
+
+    public Task(String id, String title, String description, String status, String assignee, String imageURL)
+    {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.assignee = assignee;
+        this.historyList = new ArrayList<>();
+        this.imageURL = imageURL;
     }
 
     @DynamoDBHashKey
@@ -80,6 +92,14 @@ public class Task
     public void addHistory(History history)
     {
         this.historyList.add(history);
+    }
+
+    @DynamoDBAttribute
+    public String getImageURL() {
+        return this.imageURL;
+    }
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     @DynamoDBDocument
